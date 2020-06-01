@@ -6,7 +6,7 @@ import {
   repository,
   Where,
 } from '@loopback/repository';
-import {BlogCategory} from '../models';
+import {Blog, BlogCategory} from '../models';
 import {BlogCategoryRepository} from '../repositories';
 
 @bind({scope: BindingScope.TRANSIENT})
@@ -52,5 +52,34 @@ export class BlogCategoryService {
 
   async deleteById(id: number): Promise<void> {
     await this.blogCategoryRepository.deleteById(id);
+  }
+
+  async blogsFindByBlogCategory(
+    id: number,
+    filter?: Filter<Blog>,
+  ): Promise<Blog[]> {
+    return this.blogCategoryRepository.blogs(id).find(filter);
+  }
+
+  async blogsCreateByBlogCategory(
+    id: typeof BlogCategory.prototype.id,
+    blog: Blog,
+  ): Promise<Blog> {
+    return this.blogCategoryRepository.blogs(id).create(blog);
+  }
+
+  async blogsPatchByBlogCategory(
+    id: number,
+    blog: Partial<Blog>,
+    where?: Where<Blog>,
+  ): Promise<Count> {
+    return this.blogCategoryRepository.blogs(id).patch(blog, where);
+  }
+
+  async blogsDeleteByBlogCategory(
+    id: number,
+    where?: Where<Blog>,
+  ): Promise<Count> {
+    return this.blogCategoryRepository.blogs(id).delete(where);
   }
 }

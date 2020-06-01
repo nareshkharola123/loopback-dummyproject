@@ -1,10 +1,5 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  repository,
-  Where,
-} from '@loopback/repository';
+import {service} from '@loopback/core';
+import {Count, CountSchema, Filter, Where} from '@loopback/repository';
 import {
   del,
   get,
@@ -15,16 +10,14 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {
-  BlogCategory,
-  Blog,
-} from '../models';
-import {BlogCategoryRepository} from '../repositories';
+import {Blog, BlogCategory} from '../models';
+import {BlogCategoryService} from '../services';
 
 export class BlogCategoryBlogController {
   constructor(
-    @repository(BlogCategoryRepository) protected blogCategoryRepository: BlogCategoryRepository,
-  ) { }
+    @service(BlogCategoryService)
+    protected blogCategoryService: BlogCategoryService,
+  ) {}
 
   @get('/blog-categories/{id}/blogs', {
     responses: {
@@ -42,7 +35,7 @@ export class BlogCategoryBlogController {
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<Blog>,
   ): Promise<Blog[]> {
-    return this.blogCategoryRepository.blogs(id).find(filter);
+    return this.blogCategoryService.blogsFindByBlogCategory(id, filter);
   }
 
   @post('/blog-categories/{id}/blogs', {
@@ -61,13 +54,14 @@ export class BlogCategoryBlogController {
           schema: getModelSchemaRef(Blog, {
             title: 'NewBlogInBlogCategory',
             exclude: ['id'],
-            optional: ['blogCategoryId']
+            optional: ['blogCategoryId'],
           }),
         },
       },
-    }) blog: Omit<Blog, 'id'>,
+    })
+    blog: Omit<Blog, 'id'>,
   ): Promise<Blog> {
-    return this.blogCategoryRepository.blogs(id).create(blog);
+    return this.blogCategoryService.blogsCreateByBlogCategory(id, blog);
   }
 
   @patch('/blog-categories/{id}/blogs', {
@@ -90,7 +84,7 @@ export class BlogCategoryBlogController {
     blog: Partial<Blog>,
     @param.query.object('where', getWhereSchemaFor(Blog)) where?: Where<Blog>,
   ): Promise<Count> {
-    return this.blogCategoryRepository.blogs(id).patch(blog, where);
+    return this.blogCategoryService.blogsPatchByBlogCategory(id, blog, where);
   }
 
   @del('/blog-categories/{id}/blogs', {
@@ -105,6 +99,6 @@ export class BlogCategoryBlogController {
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(Blog)) where?: Where<Blog>,
   ): Promise<Count> {
-    return this.blogCategoryRepository.blogs(id).delete(where);
+    return this.blogCategoryService.blogsDeleteByBlogCategory(id, where);
   }
 }

@@ -9,7 +9,7 @@ import {
 } from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 // custom imports
-import {Blog} from '../models';
+import {Blog, BlogCategory} from '../models';
 import {BlogCategoryRepository, BlogRepository} from '../repositories';
 
 @bind({scope: BindingScope.TRANSIENT})
@@ -59,5 +59,11 @@ export class BlogService {
 
   async deleteById(id: number): Promise<void> {
     return this.blogRepository.deleteById(id);
+  }
+
+  async getBlogCategoryByBlog(
+    id: typeof Blog.prototype.id,
+  ): Promise<BlogCategory> {
+    return this.blogRepository.blogCategory(id);
   }
 }

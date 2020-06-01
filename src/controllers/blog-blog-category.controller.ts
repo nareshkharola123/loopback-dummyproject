@@ -1,22 +1,13 @@
-import {
-  repository,
-} from '@loopback/repository';
-import {
-  param,
-  get,
-  getModelSchemaRef,
-} from '@loopback/rest';
-import {
-  Blog,
-  BlogCategory,
-} from '../models';
-import {BlogRepository} from '../repositories';
+import {service} from '@loopback/core';
+import {get, getModelSchemaRef, param} from '@loopback/rest';
+import {Blog, BlogCategory} from '../models';
+import {BlogService} from '../services';
 
 export class BlogBlogCategoryController {
   constructor(
-    @repository(BlogRepository)
-    public blogRepository: BlogRepository,
-  ) { }
+    @service(BlogService)
+    public blogService: BlogService,
+  ) {}
 
   @get('/blogs/{id}/blog-category', {
     responses: {
@@ -33,6 +24,6 @@ export class BlogBlogCategoryController {
   async getBlogCategory(
     @param.path.number('id') id: typeof Blog.prototype.id,
   ): Promise<BlogCategory> {
-    return this.blogRepository.blogCategory(id);
+    return this.blogService.getBlogCategoryByBlog(id);
   }
 }
