@@ -4,7 +4,6 @@ import {
   CountSchema,
   Filter,
   FilterExcludingWhere,
-  repository,
   Where,
 } from '@loopback/repository';
 import {
@@ -18,13 +17,10 @@ import {
   requestBody,
 } from '@loopback/rest';
 import {Blog} from '../models';
-import {BlogRepository} from '../repositories';
 import {BlogService} from '../services';
 
 export class BlogController {
   constructor(
-    @repository(BlogRepository)
-    public blogRepository: BlogRepository,
     @service(BlogService)
     public blogService: BlogService,
   ) {}

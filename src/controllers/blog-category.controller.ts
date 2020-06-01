@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -7,29 +8,34 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
 } from '@loopback/rest';
 import {BlogCategory} from '../models';
 import {BlogCategoryRepository} from '../repositories';
+import {BlogCategoryService} from '../services';
 
 export class BlogCategoryController {
   constructor(
     @repository(BlogCategoryRepository)
-    public blogCategoryRepository : BlogCategoryRepository,
+    public blogCategoryRepository: BlogCategoryRepository,
+    @service(BlogCategoryService)
+    public blogCategoryService: BlogCategoryService,
   ) {}
 
   @post('/blog-categories', {
     responses: {
       '200': {
         description: 'BlogCategory model instance',
-        content: {'application/json': {schema: getModelSchemaRef(BlogCategory)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(BlogCategory)},
+        },
       },
     },
   })
@@ -46,7 +52,7 @@ export class BlogCategoryController {
     })
     blogCategory: Omit<BlogCategory, 'id'>,
   ): Promise<BlogCategory> {
-    return this.blogCategoryRepository.create(blogCategory);
+    return this.blogCategoryService.create(blogCategory);
   }
 
   @get('/blog-categories/count', {
@@ -60,7 +66,7 @@ export class BlogCategoryController {
   async count(
     @param.where(BlogCategory) where?: Where<BlogCategory>,
   ): Promise<Count> {
-    return this.blogCategoryRepository.count(where);
+    return this.blogCategoryService.count(where);
   }
 
   @get('/blog-categories', {
@@ -81,7 +87,7 @@ export class BlogCategoryController {
   async find(
     @param.filter(BlogCategory) filter?: Filter<BlogCategory>,
   ): Promise<BlogCategory[]> {
-    return this.blogCategoryRepository.find(filter);
+    return this.blogCategoryService.find(filter);
   }
 
   @patch('/blog-categories', {
@@ -103,7 +109,7 @@ export class BlogCategoryController {
     blogCategory: BlogCategory,
     @param.where(BlogCategory) where?: Where<BlogCategory>,
   ): Promise<Count> {
-    return this.blogCategoryRepository.updateAll(blogCategory, where);
+    return this.blogCategoryService.updateAll(blogCategory, where);
   }
 
   @get('/blog-categories/{id}', {
@@ -120,9 +126,10 @@ export class BlogCategoryController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(BlogCategory, {exclude: 'where'}) filter?: FilterExcludingWhere<BlogCategory>
+    @param.filter(BlogCategory, {exclude: 'where'})
+    filter?: FilterExcludingWhere<BlogCategory>,
   ): Promise<BlogCategory> {
-    return this.blogCategoryRepository.findById(id, filter);
+    return this.blogCategoryService.findById(id, filter);
   }
 
   @patch('/blog-categories/{id}', {
@@ -143,7 +150,7 @@ export class BlogCategoryController {
     })
     blogCategory: BlogCategory,
   ): Promise<void> {
-    await this.blogCategoryRepository.updateById(id, blogCategory);
+    await this.blogCategoryService.updateById(id, blogCategory);
   }
 
   @put('/blog-categories/{id}', {
@@ -157,7 +164,7 @@ export class BlogCategoryController {
     @param.path.number('id') id: number,
     @requestBody() blogCategory: BlogCategory,
   ): Promise<void> {
-    await this.blogCategoryRepository.replaceById(id, blogCategory);
+    await this.blogCategoryService.replaceById(id, blogCategory);
   }
 
   @del('/blog-categories/{id}', {
@@ -168,6 +175,6 @@ export class BlogCategoryController {
     },
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
-    await this.blogCategoryRepository.deleteById(id);
+    await this.blogCategoryService.deleteById(id);
   }
 }
