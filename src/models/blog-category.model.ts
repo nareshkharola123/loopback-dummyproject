@@ -1,5 +1,12 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {
+  belongsTo,
+  Entity,
+  hasMany,
+  model,
+  property,
+} from '@loopback/repository';
 import {Blog} from './blog.model';
+import {User} from './user.model';
 
 @model()
 export class BlogCategory extends Entity {
@@ -13,11 +20,17 @@ export class BlogCategory extends Entity {
   @property({
     type: 'string',
     required: true,
+    index: {
+      unique: true,
+    },
   })
   title: string;
 
   @hasMany(() => Blog)
   blogs: Blog[];
+
+  @belongsTo(() => User)
+  userId: number;
 
   constructor(data?: Partial<BlogCategory>) {
     super(data);
