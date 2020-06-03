@@ -37,6 +37,7 @@ export class MySequence implements SequenceHandler {
     protected authenticateRequest: AuthenticateFn,
   ) {}
 
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   async handle(context: RequestContext) {
     try {
       const {request, response} = context;
