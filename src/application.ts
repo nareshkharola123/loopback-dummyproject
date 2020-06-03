@@ -12,7 +12,12 @@ import path from 'path';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
 import {BcryptHasher} from './modules/auth/hash.password.bcryptjs';
 import {MySequence} from './sequence';
-import {JwtService} from './services';
+import {
+  BlogCategoryService,
+  BlogService,
+  JwtService,
+  UserService,
+} from './services';
 
 export {ApplicationConfig};
 
@@ -66,5 +71,8 @@ export class TBlogApplication extends BootMixin(
     // Bind bcrypt has services
     this.bind('service.hasher').toClass(BcryptHasher);
     this.bind('service.jwtService').toClass(JwtService);
+    this.bind('service.userService').toClass(UserService);
+    this.bind('service.blogService').toClass(BlogService);
+    this.bind('service.blogCategoryService').toClass(BlogCategoryService);
   }
 }

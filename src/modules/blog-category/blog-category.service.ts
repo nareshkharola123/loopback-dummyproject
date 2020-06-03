@@ -6,6 +6,7 @@ import {
   repository,
   Where,
 } from '@loopback/repository';
+import {HttpErrors} from '@loopback/rest';
 import {Blog} from '../blog/blog.model';
 import {BlogCategory} from './blog-category.model';
 import {BlogCategoryRepository} from './blog-category.repository';
@@ -18,7 +19,11 @@ export class BlogCategoryService {
   ) {}
 
   async create(blogCategory: BlogCategory): Promise<BlogCategory> {
-    return this.blogCategoryRepository.create(blogCategory);
+    try {
+      return await this.blogCategoryRepository.create(blogCategory);
+    } catch (error) {
+      throw new HttpErrors.UnprocessableEntity(error);
+    }
   }
 
   async count(where?: Where<BlogCategory>): Promise<Count> {

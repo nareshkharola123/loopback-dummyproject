@@ -1,5 +1,5 @@
 import {authenticate} from '@loopback/authentication';
-import {service} from '@loopback/core';
+import {inject, service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -17,6 +17,7 @@ import {
   put,
   requestBody,
 } from '@loopback/rest';
+import {SecurityBindings, UserProfile} from '@loopback/security';
 import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
 import {BlogCategory} from './blog-category.model';
 import {BlogCategoryService} from './blog-category.service';
@@ -51,7 +52,10 @@ export class BlogCategoryController {
       },
     })
     blogCategory: Omit<BlogCategory, 'id'>,
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
   ): Promise<BlogCategory> {
+    blogCategory.userId = +currentUserProfile.id;
     return this.blogCategoryService.create(blogCategory);
   }
 
