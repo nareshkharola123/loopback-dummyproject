@@ -5,8 +5,8 @@ import {
   model,
   property,
 } from '@loopback/repository';
-import {Blog} from './blog.model';
-import {User} from './user.model';
+import {Blog} from '../blog/blog.model';
+import {User} from '../users/user.model';
 
 @model()
 export class BlogCategory extends Entity {

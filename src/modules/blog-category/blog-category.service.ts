@@ -6,8 +6,9 @@ import {
   repository,
   Where,
 } from '@loopback/repository';
-import {Blog, BlogCategory} from '../models';
-import {BlogCategoryRepository} from '../repositories';
+import {Blog} from '../blog/blog.model';
+import {BlogCategory} from './blog-category.model';
+import {BlogCategoryRepository} from './blog-category.repository';
 
 @bind({scope: BindingScope.TRANSIENT})
 export class BlogCategoryService {

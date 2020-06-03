@@ -17,9 +17,9 @@ import {
   put,
   requestBody,
 } from '@loopback/rest';
-import {Blog} from '../models';
-import {BlogService} from '../services';
-import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
+import {Blog} from './blog.model';
+import {BlogService} from './blog.service';
 
 export class BlogController {
   constructor(

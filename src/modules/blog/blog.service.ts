@@ -8,9 +8,10 @@ import {
   Where,
 } from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
-// custom imports
-import {Blog, BlogCategory} from '../models';
-import {BlogCategoryRepository, BlogRepository} from '../repositories';
+import {BlogCategory} from '../blog-category/blog-category.model';
+import {BlogCategoryRepository} from '../blog-category/blog-category.repository';
+import {Blog} from './blog.model';
+import {BlogRepository} from './blog.repository';
 
 @bind({scope: BindingScope.TRANSIENT})
 export class BlogService {

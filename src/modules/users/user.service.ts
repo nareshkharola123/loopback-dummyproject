@@ -2,14 +2,14 @@ import {bind, BindingScope, inject, service} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
 import _ from 'lodash';
-import {Credential} from '../controllers/specs/user-controller.specs';
-import {User} from '../models';
-import {UserRepository} from '../repositories';
-import {validateUser} from '../utils';
-import {compareCredentials} from '../utils/compare-credentials';
-import {convertToUserProfile} from '../utils/convet-to-userProfile';
-import {PasswordHasher} from './hash.password.bcryptjs';
-import {JwtService} from './jwt.service';
+import {validateUser} from '../../utils';
+import {compareCredentials} from '../../utils/compare-credentials';
+import {convertToUserProfile} from '../../utils/convet-to-userProfile';
+import {PasswordHasher} from '../auth/hash.password.bcryptjs';
+import {JwtService} from '../auth/jwt.service';
+import {Credential} from '../auth/specs/user-controller.specs';
+import {User} from './user.model';
+import {UserRepository} from './user.repository';
 
 @bind({scope: BindingScope.TRANSIENT})
 export class UserService {

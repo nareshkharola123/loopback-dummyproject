@@ -17,9 +17,9 @@ import {
   put,
   requestBody,
 } from '@loopback/rest';
-import {BlogCategory} from '../models';
-import {BlogCategoryService} from '../services';
-import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
+import {BlogCategory} from './blog-category.model';
+import {BlogCategoryService} from './blog-category.service';
 
 export class BlogCategoryController {
   constructor(

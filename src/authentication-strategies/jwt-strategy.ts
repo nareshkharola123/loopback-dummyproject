@@ -9,7 +9,7 @@ import {
 } from '@loopback/openapi-v3';
 import {HttpErrors, Request} from '@loopback/rest';
 import {UserProfile} from '@loopback/security';
-import {JwtService} from '../services';
+import {JwtService} from '../modules/auth/jwt.service';
 // import {TokenServiceBindings} from '../keys';
 
 @bind(asAuthStrategy, asSpecEnhancer)

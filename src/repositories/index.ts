@@ -1,3 +1,3 @@
-export * from './blog-category.repository';
-export * from './blog.repository';
-export * from './user.repository';
+export * from '../modules/blog-category/blog-category.repository';
+export * from '../modules/blog/blog.repository';
+export * from '../modules/users/user.repository';

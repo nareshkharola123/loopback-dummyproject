@@ -1,5 +1,5 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
-import {BlogCategory} from './blog-category.model';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {BlogCategory} from '../blog-category/blog-category.model';
 
 @model()
 export class Blog extends Entity {

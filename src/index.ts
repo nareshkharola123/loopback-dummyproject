@@ -2,6 +2,7 @@ import {ApplicationConfig, TBlogApplication} from './application';
 
 export * from './application';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function main(options: ApplicationConfig = {}) {
   const app = new TBlogApplication(options);
   await app.boot();

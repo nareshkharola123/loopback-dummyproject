@@ -1,5 +1,5 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
-import {BlogCategory} from './blog-category.model';
+import {BlogCategory} from '../blog-category/blog-category.model';
 
 @model()
 export class User extends Entity {

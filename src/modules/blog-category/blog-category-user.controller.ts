@@ -1,9 +1,10 @@
 import {authenticate} from '@loopback/authentication';
 import {repository} from '@loopback/repository';
 import {get, getModelSchemaRef, param} from '@loopback/rest';
-import {BlogCategory, User} from '../models';
-import {BlogCategoryRepository} from '../repositories';
-import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
+import {User} from '../users/user.model';
+import {BlogCategory} from './blog-category.model';
+import {BlogCategoryRepository} from './blog-category.repository';
 
 export class BlogCategoryUserController {
   constructor(

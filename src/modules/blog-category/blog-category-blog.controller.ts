@@ -11,9 +11,10 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {Blog, BlogCategory} from '../models';
-import {BlogCategoryService} from '../services';
-import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
+import {Blog} from '../blog/blog.model';
+import {BlogCategory} from './blog-category.model';
+import {BlogCategoryService} from './blog-category.service';
 
 export class BlogCategoryBlogController {
   constructor(

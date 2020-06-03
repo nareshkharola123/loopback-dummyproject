@@ -4,10 +4,13 @@ import {authenticate} from '@loopback/authentication';
 import {inject, service} from '@loopback/core';
 import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
-import {User} from '../models';
-import {UserService} from '../services';
-import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
-import {Credential, CredentialsSchema} from './specs/user-controller.specs';
+import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
+import {
+  Credential,
+  CredentialsSchema,
+} from '../auth/specs/user-controller.specs';
+import {User} from './user.model';
+import {UserService} from './user.service';
 
 export class UserController {
   constructor(@service(UserService) public userService: UserService) {}

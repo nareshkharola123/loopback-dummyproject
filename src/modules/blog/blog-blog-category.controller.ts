@@ -1,9 +1,11 @@
 import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {get, getModelSchemaRef, param} from '@loopback/rest';
-import {Blog, BlogCategory} from '../models';
-import {BlogService} from '../services';
-import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
+import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
+import {BlogCategory} from '../blog-category/blog-category.model';
+import {BlogCategoryRepository} from '../blog-category/blog-category.repository';
+import {Blog} from './blog.model';
+import {BlogService} from './blog.service';
 
 export class BlogBlogCategoryController {
   constructor(
@@ -18,7 +20,10 @@ export class BlogBlogCategoryController {
         description: 'BlogCategory belonging to Blog',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(BlogCategory)},
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(BlogCategoryRepository),
+            },
           },
         },
       },

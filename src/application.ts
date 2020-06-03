@@ -10,8 +10,9 @@ import {
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
+import {BcryptHasher} from './modules/auth/hash.password.bcryptjs';
 import {MySequence} from './sequence';
-import {BcryptHasher} from './services';
+import {JwtService} from './services';
 
 export {ApplicationConfig};
 
@@ -45,8 +46,18 @@ export class TBlogApplication extends BootMixin(
     this.bootOptions = {
       controllers: {
         // Customize ControllerBooter Conventions here
-        dirs: ['controllers'],
+        dirs: ['controllers', 'modules'],
         extensions: ['.controller.js'],
+        nested: true,
+      },
+      repositories: {
+        dirs: ['repositories', 'modules'],
+        extensions: ['.repository.js'],
+        nested: true,
+      },
+      services: {
+        dirs: ['vendors', 'services', 'modules'],
+        extensions: ['.service.js'],
         nested: true,
       },
     };
@@ -54,5 +65,6 @@ export class TBlogApplication extends BootMixin(
   setUpBindings(): void {
     // Bind bcrypt has services
     this.bind('service.hasher').toClass(BcryptHasher);
+    this.bind('service.jwtService').toClass(JwtService);
   }
 }
