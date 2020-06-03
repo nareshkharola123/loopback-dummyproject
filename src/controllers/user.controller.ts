@@ -1,12 +1,12 @@
 // Uncomment these imports to begin using these cool features!
 
-import {service} from '@loopback/core';
+import {authenticate} from '@loopback/authentication';
+import {inject, service} from '@loopback/core';
 import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
+import {SecurityBindings, UserProfile} from '@loopback/security';
 import {User} from '../models';
 import {UserService} from '../services';
 import {Credential, CredentialsSchema} from './specs/user-controller.specs';
-
-// import {inject} from '@loopback/context';
 
 export class UserController {
   constructor(@service(UserService) public userService: UserService) {}
@@ -45,7 +45,11 @@ export class UserController {
       },
     },
   })
-  async getUsers(): Promise<User[]> {
+  @authenticate('jwt')
+  async getUsers(
+    @inject(SecurityBindings.USER)
+    currentUserProfile: UserProfile,
+  ): Promise<User[]> {
     return this.userService.allUsers();
   }
 
