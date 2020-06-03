@@ -6,6 +6,7 @@ import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
 import {User} from '../models';
 import {UserService} from '../services';
+import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
 import {Credential, CredentialsSchema} from './specs/user-controller.specs';
 
 export class UserController {
@@ -31,6 +32,7 @@ export class UserController {
   }
 
   @get('/users', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'All Users!',

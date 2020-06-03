@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -18,6 +19,7 @@ import {
 } from '@loopback/rest';
 import {BlogCategory} from '../models';
 import {BlogCategoryService} from '../services';
+import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
 
 export class BlogCategoryController {
   constructor(
@@ -26,6 +28,7 @@ export class BlogCategoryController {
   ) {}
 
   @post('/blog-categories', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'BlogCategory model instance',
@@ -35,6 +38,7 @@ export class BlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @requestBody({
       content: {
@@ -52,6 +56,7 @@ export class BlogCategoryController {
   }
 
   @get('/blog-categories/count', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'BlogCategory model count',
@@ -59,6 +64,7 @@ export class BlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async count(
     @param.where(BlogCategory) where?: Where<BlogCategory>,
   ): Promise<Count> {
@@ -66,6 +72,7 @@ export class BlogCategoryController {
   }
 
   @get('/blog-categories', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of BlogCategory model instances',
@@ -80,6 +87,7 @@ export class BlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.filter(BlogCategory) filter?: Filter<BlogCategory>,
   ): Promise<BlogCategory[]> {
@@ -87,6 +95,7 @@ export class BlogCategoryController {
   }
 
   @patch('/blog-categories', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'BlogCategory PATCH success count',
@@ -94,6 +103,7 @@ export class BlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async updateAll(
     @requestBody({
       content: {
@@ -109,6 +119,7 @@ export class BlogCategoryController {
   }
 
   @get('/blog-categories/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'BlogCategory model instance',
@@ -120,6 +131,7 @@ export class BlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(BlogCategory, {exclude: 'where'})
@@ -129,12 +141,14 @@ export class BlogCategoryController {
   }
 
   @patch('/blog-categories/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'BlogCategory PATCH success',
       },
     },
   })
+  @authenticate('jwt')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -150,12 +164,14 @@ export class BlogCategoryController {
   }
 
   @put('/blog-categories/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'BlogCategory PUT success',
       },
     },
   })
+  @authenticate('jwt')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() blogCategory: BlogCategory,
@@ -164,12 +180,14 @@ export class BlogCategoryController {
   }
 
   @del('/blog-categories/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'BlogCategory DELETE success',
       },
     },
   })
+  @authenticate('jwt')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.blogCategoryService.deleteById(id);
   }

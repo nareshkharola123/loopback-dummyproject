@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -18,6 +19,7 @@ import {
 } from '@loopback/rest';
 import {Blog} from '../models';
 import {BlogService} from '../services';
+import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
 
 export class BlogController {
   constructor(
@@ -26,6 +28,7 @@ export class BlogController {
   ) {}
 
   @post('/blogs', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Blog model instance',
@@ -33,6 +36,7 @@ export class BlogController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @requestBody({
       content: {
@@ -50,6 +54,7 @@ export class BlogController {
   }
 
   @get('/blogs/count', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Blog model count',
@@ -57,11 +62,13 @@ export class BlogController {
       },
     },
   })
+  @authenticate('jwt')
   async count(@param.where(Blog) where?: Where<Blog>): Promise<Count> {
     return this.blogService.count(where);
   }
 
   @get('/blogs', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of Blog model instances',
@@ -76,11 +83,13 @@ export class BlogController {
       },
     },
   })
+  @authenticate('jwt')
   async find(@param.filter(Blog) filter?: Filter<Blog>): Promise<Blog[]> {
     return this.blogService.find(filter);
   }
 
   @patch('/blogs', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Blog PATCH success count',
@@ -88,6 +97,7 @@ export class BlogController {
       },
     },
   })
+  @authenticate('jwt')
   async updateAll(
     @requestBody({
       content: {
@@ -103,6 +113,7 @@ export class BlogController {
   }
 
   @get('/blogs/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Blog model instance',
@@ -114,6 +125,7 @@ export class BlogController {
       },
     },
   })
+  @authenticate('jwt')
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Blog, {exclude: 'where'}) filter?: FilterExcludingWhere<Blog>,
@@ -122,12 +134,14 @@ export class BlogController {
   }
 
   @patch('/blogs/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Blog PATCH success',
       },
     },
   })
+  @authenticate('jwt')
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -143,12 +157,14 @@ export class BlogController {
   }
 
   @put('/blogs/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Blog PUT success',
       },
     },
   })
+  @authenticate('jwt')
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() blog: Blog,
@@ -157,12 +173,14 @@ export class BlogController {
   }
 
   @del('/blogs/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '204': {
         description: 'Blog DELETE success',
       },
     },
   })
+  @authenticate('jwt')
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.blogService.deleteById(id);
   }

@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {service} from '@loopback/core';
 import {Count, CountSchema, Filter, Where} from '@loopback/repository';
 import {
@@ -12,6 +13,7 @@ import {
 } from '@loopback/rest';
 import {Blog, BlogCategory} from '../models';
 import {BlogCategoryService} from '../services';
+import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
 
 export class BlogCategoryBlogController {
   constructor(
@@ -20,6 +22,7 @@ export class BlogCategoryBlogController {
   ) {}
 
   @get('/blog-categories/{id}/blogs', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of BlogCategory has many Blog',
@@ -31,6 +34,7 @@ export class BlogCategoryBlogController {
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<Blog>,
@@ -39,6 +43,7 @@ export class BlogCategoryBlogController {
   }
 
   @post('/blog-categories/{id}/blogs', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'BlogCategory model instance',
@@ -46,6 +51,7 @@ export class BlogCategoryBlogController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @param.path.number('id') id: typeof BlogCategory.prototype.id,
     @requestBody({
@@ -65,6 +71,7 @@ export class BlogCategoryBlogController {
   }
 
   @patch('/blog-categories/{id}/blogs', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'BlogCategory.Blog PATCH success count',
@@ -72,6 +79,7 @@ export class BlogCategoryBlogController {
       },
     },
   })
+  @authenticate('jwt')
   async patch(
     @param.path.number('id') id: number,
     @requestBody({
@@ -88,6 +96,7 @@ export class BlogCategoryBlogController {
   }
 
   @del('/blog-categories/{id}/blogs', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'BlogCategory.Blog DELETE success count',
@@ -95,6 +104,7 @@ export class BlogCategoryBlogController {
       },
     },
   })
+  @authenticate('jwt')
   async delete(
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(Blog)) where?: Where<Blog>,

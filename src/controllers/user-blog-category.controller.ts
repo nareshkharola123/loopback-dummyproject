@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -15,18 +16,17 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
-import {
-  User,
-  BlogCategory,
-} from '../models';
+import {BlogCategory, User} from '../models';
 import {UserRepository} from '../repositories';
+import {OPERATION_SECURITY_SPEC} from './specs/security-spec';
 
 export class UserBlogCategoryController {
   constructor(
     @repository(UserRepository) protected userRepository: UserRepository,
-  ) { }
+  ) {}
 
   @get('/users/{id}/blog-categories', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'Array of User has many BlogCategory',
@@ -38,6 +38,7 @@ export class UserBlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<BlogCategory>,
@@ -46,13 +47,17 @@ export class UserBlogCategoryController {
   }
 
   @post('/users/{id}/blog-categories', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User model instance',
-        content: {'application/json': {schema: getModelSchemaRef(BlogCategory)}},
+        content: {
+          'application/json': {schema: getModelSchemaRef(BlogCategory)},
+        },
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @param.path.number('id') id: typeof User.prototype.id,
     @requestBody({
@@ -61,16 +66,18 @@ export class UserBlogCategoryController {
           schema: getModelSchemaRef(BlogCategory, {
             title: 'NewBlogCategoryInUser',
             exclude: ['id'],
-            optional: ['userId']
+            optional: ['userId'],
           }),
         },
       },
-    }) blogCategory: Omit<BlogCategory, 'id'>,
+    })
+    blogCategory: Omit<BlogCategory, 'id'>,
   ): Promise<BlogCategory> {
     return this.userRepository.blogCategories(id).create(blogCategory);
   }
 
   @patch('/users/{id}/blog-categories', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User.BlogCategory PATCH success count',
@@ -78,6 +85,7 @@ export class UserBlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async patch(
     @param.path.number('id') id: number,
     @requestBody({
@@ -88,12 +96,14 @@ export class UserBlogCategoryController {
       },
     })
     blogCategory: Partial<BlogCategory>,
-    @param.query.object('where', getWhereSchemaFor(BlogCategory)) where?: Where<BlogCategory>,
+    @param.query.object('where', getWhereSchemaFor(BlogCategory))
+    where?: Where<BlogCategory>,
   ): Promise<Count> {
     return this.userRepository.blogCategories(id).patch(blogCategory, where);
   }
 
   @del('/users/{id}/blog-categories', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'User.BlogCategory DELETE success count',
@@ -101,9 +111,11 @@ export class UserBlogCategoryController {
       },
     },
   })
+  @authenticate('jwt')
   async delete(
     @param.path.number('id') id: number,
-    @param.query.object('where', getWhereSchemaFor(BlogCategory)) where?: Where<BlogCategory>,
+    @param.query.object('where', getWhereSchemaFor(BlogCategory))
+    where?: Where<BlogCategory>,
   ): Promise<Count> {
     return this.userRepository.blogCategories(id).delete(where);
   }
