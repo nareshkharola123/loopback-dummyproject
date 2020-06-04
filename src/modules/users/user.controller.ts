@@ -1,9 +1,12 @@
 // Uncomment these imports to begin using these cool features!
 
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject, service} from '@loopback/core';
 import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
+import {RoleKey} from '../../enums/role.enum';
+import {basicAuthorization} from '../auth/basic.authorization';
 import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
 import {
   Credential,
@@ -22,8 +25,9 @@ export class UserController {
         description: 'User successfully Sign Up!',
         content: {
           'application/json': {
-            exclude: ['roles', 'id', 'sex', 'name', 'bio', 'dob', 'password'],
-            schema: getModelSchemaRef(User, {}),
+            schema: getModelSchemaRef(User, {
+              exclude: ['roles', 'id', 'sex', 'name', 'bio', 'dob', 'password'],
+            }),
           },
         },
       },
@@ -61,7 +65,10 @@ export class UserController {
     },
   })
   @authenticate('jwt')
-  // @authorize()
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async getUsers(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
@@ -101,7 +108,6 @@ export class UserController {
     return this.userService.logIn(credentials);
   }
 
-  // todo: add admin role here
   @post('/staff/create-user', {
     security: OPERATION_SECURITY_SPEC,
     responses: {
@@ -112,6 +118,10 @@ export class UserController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async createStaff(
     @requestBody({
       content: {

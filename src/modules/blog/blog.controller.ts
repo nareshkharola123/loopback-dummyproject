@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {service} from '@loopback/core';
 import {
   Count,
@@ -17,6 +18,8 @@ import {
   put,
   requestBody,
 } from '@loopback/rest';
+import {RoleKey} from '../../enums/role.enum';
+import {basicAuthorization} from '../auth/basic.authorization';
 import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
 import {Blog} from './blog.model';
 import {BlogService} from './blog.service';
@@ -37,6 +40,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async create(
     @requestBody({
       content: {
@@ -63,6 +70,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async count(@param.where(Blog) where?: Where<Blog>): Promise<Count> {
     return this.blogService.count(where);
   }
@@ -84,6 +95,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async find(@param.filter(Blog) filter?: Filter<Blog>): Promise<Blog[]> {
     return this.blogService.find(filter);
   }
@@ -98,6 +113,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async updateAll(
     @requestBody({
       content: {
@@ -126,6 +145,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Blog, {exclude: 'where'}) filter?: FilterExcludingWhere<Blog>,
@@ -142,6 +165,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -165,6 +192,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() blog: Blog,
@@ -181,6 +212,10 @@ export class BlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.blogService.deleteById(id);
   }

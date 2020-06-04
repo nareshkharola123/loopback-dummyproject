@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {service} from '@loopback/core';
 import {Count, CountSchema, Filter, Where} from '@loopback/repository';
 import {
@@ -11,6 +12,8 @@ import {
   post,
   requestBody,
 } from '@loopback/rest';
+import {RoleKey} from '../../enums/role.enum';
+import {basicAuthorization} from '../auth/basic.authorization';
 import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
 import {Blog} from '../blog/blog.model';
 import {BlogCategory} from './blog-category.model';
@@ -36,6 +39,10 @@ export class BlogCategoryBlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async find(
     @param.path.number('id') id: number,
     @param.query.object('filter') filter?: Filter<Blog>,
@@ -53,6 +60,10 @@ export class BlogCategoryBlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async create(
     @param.path.number('id') id: typeof BlogCategory.prototype.id,
     @requestBody({
@@ -81,6 +92,10 @@ export class BlogCategoryBlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async patch(
     @param.path.number('id') id: number,
     @requestBody({
@@ -106,6 +121,10 @@ export class BlogCategoryBlogController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async delete(
     @param.path.number('id') id: number,
     @param.query.object('where', getWhereSchemaFor(Blog)) where?: Where<Blog>,

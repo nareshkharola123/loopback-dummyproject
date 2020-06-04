@@ -1,6 +1,9 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {repository} from '@loopback/repository';
 import {get, getModelSchemaRef, param} from '@loopback/rest';
+import {RoleKey} from '../../enums/role.enum';
+import {basicAuthorization} from '../auth/basic.authorization';
 import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
 import {User} from '../users/user.model';
 import {BlogCategory} from './blog-category.model';
@@ -26,6 +29,10 @@ export class BlogCategoryUserController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async getUser(
     @param.path.number('id') id: typeof BlogCategory.prototype.id,
   ): Promise<User> {

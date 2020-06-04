@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject, service} from '@loopback/core';
 import {
   Count,
@@ -18,6 +19,8 @@ import {
   requestBody,
 } from '@loopback/rest';
 import {SecurityBindings, UserProfile} from '@loopback/security';
+import {RoleKey} from '../../enums/role.enum';
+import {basicAuthorization} from '../auth/basic.authorization';
 import {OPERATION_SECURITY_SPEC} from '../auth/specs/security-spec';
 import {BlogCategory} from './blog-category.model';
 import {BlogCategoryService} from './blog-category.service';
@@ -40,6 +43,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async create(
     @requestBody({
       content: {
@@ -69,6 +76,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async count(
     @param.where(BlogCategory) where?: Where<BlogCategory>,
   ): Promise<Count> {
@@ -92,6 +103,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async find(
     @param.filter(BlogCategory) filter?: Filter<BlogCategory>,
   ): Promise<BlogCategory[]> {
@@ -108,6 +123,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async updateAll(
     @requestBody({
       content: {
@@ -136,6 +155,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async findById(
     @param.path.number('id') id: number,
     @param.filter(BlogCategory, {exclude: 'where'})
@@ -153,6 +176,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -176,6 +203,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() blogCategory: BlogCategory,
@@ -192,6 +223,10 @@ export class BlogCategoryController {
     },
   })
   @authenticate('jwt')
+  @authorize({
+    allowedRoles: [RoleKey.general],
+    voters: [basicAuthorization],
+  })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.blogCategoryService.deleteById(id);
   }
