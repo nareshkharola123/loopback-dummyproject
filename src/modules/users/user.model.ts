@@ -51,6 +51,12 @@ export class User extends Entity {
   @hasMany(() => BlogCategory)
   blogCategories: BlogCategory[];
 
+  @property({
+    type: 'array',
+    itemType: 'string',
+  })
+  roles?: string[];
+
   constructor(data?: Partial<User>) {
     super(data);
   }

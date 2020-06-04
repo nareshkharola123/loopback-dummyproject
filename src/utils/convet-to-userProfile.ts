@@ -6,7 +6,7 @@ export const convertToUserProfile = (user: User): UserProfile => {
     [securityId]: `${user.id}`,
     name: user.name,
     id: user.id,
-    // roles: user.roles,
+    roles: user.roles,
   };
 
   return userProfile;

@@ -1,5 +1,6 @@
 import {TBlogApplication} from './application';
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function migrate(args: string[]) {
   const existingSchema = args.includes('--rebuild') ? 'drop' : 'alter';
   console.log('Migrating schemas (%s existing schema)', existingSchema);

@@ -9,6 +9,7 @@ import {
   Credential,
   CredentialsSchema,
 } from '../auth/specs/user-controller.specs';
+import {UserType} from './type';
 import {User} from './user.model';
 import {UserService} from './user.service';
 
@@ -19,14 +20,23 @@ export class UserController {
     responses: {
       '201': {
         description: 'User successfully Sign Up!',
-        content: {'application/json': {schema: getModelSchemaRef(User)}},
+        content: {
+          'application/json': {
+            exclude: ['roles', 'id', 'sex', 'name', 'bio', 'dob', 'password'],
+            schema: getModelSchemaRef(User, {}),
+          },
+        },
       },
     },
   })
   async signUp(
     @requestBody({
-      'application/json': {
-        schema: getModelSchemaRef(User),
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, {
+            exclude: ['roles'],
+          }),
+        },
       },
     })
     user: User,
@@ -51,6 +61,7 @@ export class UserController {
     },
   })
   @authenticate('jwt')
+  // @authorize()
   async getUsers(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
@@ -88,5 +99,31 @@ export class UserController {
     credentials: Credential,
   ): Promise<{token: string}> {
     return this.userService.logIn(credentials);
+  }
+
+  // todo: add admin role here
+  @post('/staff/create-user', {
+    security: OPERATION_SECURITY_SPEC,
+    responses: {
+      '200': {
+        description: 'User Created!',
+        content: {'application/json': {schema: getModelSchemaRef(User)}},
+      },
+    },
+  })
+  @authenticate('jwt')
+  async createStaff(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, {
+            exclude: ['roles'],
+          }),
+        },
+      },
+    })
+    user: Omit<User, 'id'>,
+  ): Promise<UserType> {
+    return this.userService.createStaffUser(user);
   }
 }
