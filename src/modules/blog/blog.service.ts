@@ -1,4 +1,4 @@
-import {bind, BindingScope} from '@loopback/core';
+import {bind, BindingScope, inject} from '@loopback/core';
 import {
   Count,
   DataObject,
@@ -8,6 +8,8 @@ import {
   Where,
 } from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
+import {FILE_UPLOAD_SERVICE} from '../../keys';
+import {File, FileUploadHandler} from '../../types';
 import {BlogCategory} from '../blog-category/blog-category.model';
 import {BlogCategoryRepository} from '../blog-category/blog-category.repository';
 import {Blog} from './blog.model';
@@ -20,9 +22,11 @@ export class BlogService {
     public blogRepository: BlogRepository,
     @repository(BlogCategoryRepository)
     public blogCategoryRepository: BlogCategoryRepository,
+    @inject(FILE_UPLOAD_SERVICE) public handler: FileUploadHandler,
   ) {}
 
-  async create(blog: DataObject<Blog>): Promise<Blog> {
+  async create(blog: DataObject<Blog>, files: File[]): Promise<Blog> {
+    if (files.length > 0) blog.imageURL = files[0].path;
     try {
       await this.blogCategoryRepository.findById(blog.blogCategoryId);
       return await this.blogRepository.create(blog);
@@ -39,7 +43,12 @@ export class BlogService {
     return this.blogRepository.find(filter);
   }
 
-  async updateAll(blog: Blog, where?: Where<Blog>): Promise<Count> {
+  async updateAll(
+    blog: DataObject<Blog>,
+    files: File[],
+    where?: Where<Blog>,
+  ): Promise<Count> {
+    if (files.length > 0) blog.imageURL = files[0].path;
     return this.blogRepository.updateAll(blog, where);
   }
 
@@ -50,12 +59,26 @@ export class BlogService {
     return this.blogRepository.findById(id, filter);
   }
 
-  async updateById(id: number, blog: Blog): Promise<void> {
+  async updateById(
+    id: number,
+    blog: DataObject<Blog>,
+    files: File[],
+  ): Promise<void> {
+    if (files.length > 0) blog.imageURL = files[0].path;
     await this.blogRepository.updateById(id, blog);
   }
 
-  async replaceById(id: number, blog: Blog): Promise<void> {
-    return this.blogRepository.replaceById(id, blog);
+  async replaceById(
+    id: number,
+    blog: DataObject<Blog>,
+    files: File[],
+  ): Promise<void> {
+    try {
+      if (files.length > 0) blog.imageURL = files[0].path;
+      return await this.blogRepository.replaceById(id, blog);
+    } catch (err) {
+      throw new HttpErrors.UnprocessableEntity(err);
+    }
   }
 
   async deleteById(id: number): Promise<void> {

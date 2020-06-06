@@ -9,8 +9,10 @@ import {
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
+import multer from 'multer';
 import path from 'path';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
+import {FILE_UPLOAD_SERVICE} from './keys';
 import {BcryptHasher} from './modules/auth/hash.password.bcryptjs';
 import {MySequence} from './sequence';
 import {
@@ -41,6 +43,8 @@ export class TBlogApplication extends BootMixin(
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
+    // set up directory Blog Image
+    this.static('/images', path.join(__dirname, '../images'));
 
     // Customize @loopback/rest-explorer configuration here
     this.configure(RestExplorerBindings.COMPONENT).to({
@@ -48,7 +52,11 @@ export class TBlogApplication extends BootMixin(
     });
     this.component(RestExplorerComponent);
 
+    // Configure file upload with multer options
+    this.configureFileUpload(options.fileStorageDirectory);
+
     this.projectRoot = __dirname;
+
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
       controllers: {
@@ -76,5 +84,24 @@ export class TBlogApplication extends BootMixin(
     this.bind('service.userService').toClass(UserService);
     this.bind('service.blogService').toClass(BlogService);
     this.bind('service.blogCategoryService').toClass(BlogCategoryService);
+  }
+
+  /**
+   * Configure `multer` options for file upload
+   */
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  protected configureFileUpload(destination?: string) {
+    const multerOptions: multer.Options = {
+      storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+          cb(null, 'images');
+        },
+        filename: (req, file, cb) => {
+          cb(null, new Date().toISOString() + '-' + file.originalname);
+        },
+      }),
+    };
+    // Configure the file upload service with multer options
+    this.configure(FILE_UPLOAD_SERVICE).to(multerOptions);
   }
 }

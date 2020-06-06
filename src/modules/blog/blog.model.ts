@@ -19,6 +19,11 @@ export class Blog extends Entity {
   @property({
     type: 'string',
   })
+  imageURL?: string;
+
+  @property({
+    type: 'string',
+  })
   description?: string;
 
   @belongsTo(() => BlogCategory)
