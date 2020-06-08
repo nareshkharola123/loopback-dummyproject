@@ -8,7 +8,8 @@ export interface File {
   encoding: string;
   mimetype: string;
   size: string;
-  path: string;
+  path?: string;
+  location?: string;
 }
 
 export interface FileUploadDATA {

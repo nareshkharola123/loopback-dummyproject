@@ -23,7 +23,7 @@ export class JwtService implements TokenService {
 
     try {
       // decode user profile from token
-      const decodedToken = await verifyAsync(token, 'nareshsinghkharolahailtu');
+      const decodedToken = await verifyAsync(token, process.env.JWT_SECRET);
       // don't copy over  token field 'iat' and 'exp', nor 'email' to user profile
       userProfile = Object.assign(
         {[securityId]: '', name: ''},
@@ -56,7 +56,7 @@ export class JwtService implements TokenService {
     // Generate a JSON Web Token
     let token: string;
     try {
-      token = await signAsync(userInfoForToken, 'nareshsinghkharolahailtu', {
+      token = await signAsync(userInfoForToken, process.env.JWT_SECRET, {
         expiresIn: Number('6000'),
       });
     } catch (error) {

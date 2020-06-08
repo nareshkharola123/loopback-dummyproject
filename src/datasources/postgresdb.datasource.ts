@@ -2,14 +2,14 @@ import {inject, lifeCycleObserver, LifeCycleObserver} from '@loopback/core';
 import {juggler} from '@loopback/repository';
 
 const config = {
-  name: 'postgresdb',
-  connector: 'postgresql',
+  name: '',
+  connector: '',
   url: '',
-  host: '127.0.0.1',
-  port: 5432,
-  user: 'nareshsingh',
-  password: 'loopback@123',
-  database: 'blogloopbackdb'
+  host: '',
+  port: '',
+  user: '',
+  password: '',
+  database: '',
 };
 
 // Observe application's life cycle to disconnect the datasource when
@@ -26,6 +26,16 @@ export class PostgresdbDataSource extends juggler.DataSource
     @inject('datasources.config.postgresdb', {optional: true})
     dsConfig: object = config,
   ) {
+    Object.assign(dsConfig, {
+      name: process.env.DATABASE_ENGINE,
+      connector: process.env.DATABASE_CONNECTOR,
+      url: '',
+      host: process.env.DATABASE_HOST,
+      port: process.env.DATABASE_PORT,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE,
+    });
     super(dsConfig);
   }
 }

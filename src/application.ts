@@ -9,6 +9,8 @@ import {
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
+import * as dotenv from 'dotenv';
+import * as dotenvExt from 'dotenv-extended';
 import multer from 'multer';
 import path from 'path';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
@@ -76,6 +78,13 @@ export class TBlogApplication extends BootMixin(
         nested: true,
       },
     };
+
+    // configure env here
+    dotenv.config();
+    dotenvExt.load({
+      schema: '.env.example',
+      errorOnMissing: false,
+    });
   }
   setUpBindings(): void {
     // Bind bcrypt has services

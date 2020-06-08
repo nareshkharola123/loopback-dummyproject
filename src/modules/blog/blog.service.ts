@@ -26,7 +26,8 @@ export class BlogService {
   ) {}
 
   async create(blog: DataObject<Blog>, files: File[]): Promise<Blog> {
-    if (files.length > 0) blog.imageURL = files[0].path;
+    if (files.length > 0)
+      blog.imageURL = files[0].location ? files[0].location : files[0].path;
     try {
       await this.blogCategoryRepository.findById(blog.blogCategoryId);
       return await this.blogRepository.create(blog);
@@ -48,7 +49,8 @@ export class BlogService {
     files: File[],
     where?: Where<Blog>,
   ): Promise<Count> {
-    if (files.length > 0) blog.imageURL = files[0].path;
+    if (files.length > 0)
+      blog.imageURL = files[0].location ? files[0].location : files[0].path;
     return this.blogRepository.updateAll(blog, where);
   }
 
@@ -64,7 +66,8 @@ export class BlogService {
     blog: DataObject<Blog>,
     files: File[],
   ): Promise<void> {
-    if (files.length > 0) blog.imageURL = files[0].path;
+    if (files.length > 0)
+      blog.imageURL = files[0].location ? files[0].location : files[0].path;
     await this.blogRepository.updateById(id, blog);
   }
 
@@ -74,7 +77,8 @@ export class BlogService {
     files: File[],
   ): Promise<void> {
     try {
-      if (files.length > 0) blog.imageURL = files[0].path;
+      if (files.length > 0)
+        blog.imageURL = files[0].location ? files[0].location : files[0].path;
       return await this.blogRepository.replaceById(id, blog);
     } catch (err) {
       throw new HttpErrors.UnprocessableEntity(err);
