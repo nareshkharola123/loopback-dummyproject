@@ -34,6 +34,7 @@ export class UserService {
     user.password = password;
     try {
       const userObject = await this.userRepository.create(user);
+      // await sendMail(userObject.email);
       return userObject.email;
     } catch (error) {
       throw new HttpErrors.UnprocessableEntity(error);
